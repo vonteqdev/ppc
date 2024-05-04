@@ -127,6 +127,7 @@ class UsersDataTable extends DataTable
     protected function getActionColumn($data): string
     {
         $editUrl = route('users.show', $data->id);
-        return "<a class='waves-effect btn btn-primary btn-sm' href='$editUrl'><i class='fas fa-edit'></i> Edit</a> <button type='button' onclick='deleteUser(".$data->id.")' class='btn btn-danger btn-sm'><i class='fas fa-trash'></i> Delete</button>";
+        $impersonateRoute = route('users.impersonate', $data->id);
+        return "<a class='waves-effect btn btn-warning btn-sm' title='Impersonate user' href='$impersonateRoute'><i class='fas fa-eye'></i></a><a class='waves-effect btn btn-primary btn-sm' href='$editUrl'><i class='fas fa-edit'></i> Edit</a> <button type='button' onclick='deleteUser(".$data->id.")' class='btn btn-danger btn-sm'><i class='fas fa-trash'></i> Delete</button>";
     }
 }

@@ -22,7 +22,6 @@ class PermissionsSeeder extends Seeder
                 'write_users',
                 'edit_users',
                 'delete_users',
-                'bulk_delete_users',
                 'impersonate_users',
             ],
         ];

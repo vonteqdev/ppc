@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\ImpersonateController;
 
 
 Route::get('/', function () {
@@ -23,6 +24,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/{user}',                       [UsersController::class, 'show'])->name('users.show')->middleware('checkPermissions:read_users');
         Route::put('/{user}',                       [UsersController::class, 'update'])->name('users.update')->middleware('checkPermissions:edit_users');
         Route::delete('/{user}',                    [UsersController::class, 'destroy'])->name('users.destroy')->middleware('checkPermissions:delete_users');
+
+        Route::get('/impersonate/{user}',           [ImpersonateController::class, 'impersonate'])->name('users.impersonate')->middleware('checkPermissions:impersonate_users');
+        Route::get('/stop/impersonate',             [ImpersonateController::class, 'stopImpersonate'])->name('users.stop-impersonate');
     });
 
     Route::group(['prefix'=>'roles'], function(){

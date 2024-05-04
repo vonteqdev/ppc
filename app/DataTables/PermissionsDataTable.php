@@ -26,8 +26,7 @@ class PermissionsDataTable extends DataTable
             Session::put('permissions-table-length', request()->length);
         }
 
-        return (new EloquentDataTable($query))
-            ->addColumn('action', 'permissions.action');
+        return (new EloquentDataTable($query));
     }
 
     /**
@@ -48,7 +47,7 @@ class PermissionsDataTable extends DataTable
                     ->setTableId('permissions-table')
                     ->columns($this->getColumns())
                     ->minifiedAjax()
-                    ->orderBy(2)
+                    ->orderBy(1)
                     ->selectStyleMulti()
                     ->parameters([
                         'pagingType' => 'full',
