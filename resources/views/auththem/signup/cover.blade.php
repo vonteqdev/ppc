@@ -16,28 +16,41 @@
                 <div class="card-body pb-3">
                   <form role="form" method="POST" action="{{ route('register') }}">
                     @csrf
-                    <label>First Name</label>
-                    <div class="mb-3">
-                      <input type="text" name="first_name" class="form-control" placeholder="Name" aria-label="Name">
-                    </div>
-                    <label>Last Name</label>
-                    <div class="mb-3">
-                      <input type="text" name="last_name" class="form-control" placeholder="Name" aria-label="Name">
-                    </div>
-                    <label>Email</label>
-                    <div class="mb-3">
-                      <input type="email" name="email" class="form-control" placeholder="Email" aria-label="Email">
-                    </div>
-                    <label>Password</label>
-                    <div class="mb-3">
-                      <input type="password" name="password" class="form-control" placeholder="Password" aria-label="Password">
-                    </div>
-                    <label>Confirm Password</label>
-                    <div class="mb-3">
-                      <input type="password" name="password_confirmation" class="form-control" placeholder="Password" aria-label="Password">
-                    </div>
-                    <div class="form-check form-check-info text-left">
-                      <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" checked>
+                    <div>
+                      <x-input-label for="name" :value="__('First Name')" />
+                      <x-text-input id="first_name" class="form-control block mt-1 w-full" placeholder="First Name" type="text" name="first_name" :value="old('first_name')" required autofocus autocomplete="first_name" />
+                      <x-input-error :messages="$errors->get('first_name')" class="mt-2" />
+                  </div>
+                  <div class="mt-3">
+                      <x-input-label for="name" :value="__('Last Name')" />
+                      <x-text-input id="last_name" class="form-control block mt-1 w-full" placeholder="Last Name" type="text" name="last_name" :value="old('last_name')" required autofocus autocomplete="last_name" />
+                      <x-input-error :messages="$errors->get('last_name')" class="mt-2" />
+                  </div>
+                  <div class="mt-3">
+                      <x-input-label for="email" :value="__('Email')" />
+                      <x-text-input id="email" class="form-control block mt-1 w-full" type="email" name="email" placeholder="Email" :value="old('email')" required autocomplete="username" />
+                      <x-input-error :messages="$errors->get('email')" class="mt-2" />
+                  </div>
+                  <div class="mt-3">
+                      <x-input-label for="password" :value="__('Password')" />
+                      <x-text-input id="password" class="form-control block mt-1 w-full"
+                                      type="password"
+                                      name="password"
+                                      placeholder="Password"
+                                      required autocomplete="new-password" />
+                      <x-input-error :messages="$errors->get('password')" class="mt-2" />
+                  </div>
+
+                  <div class="mt-3">
+                      <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
+                      <x-text-input id="password_confirmation" class="form-control block mt-1 w-full"
+                                      type="password"
+                                      placeholder="Confirm Password"
+                                      name="password_confirmation" required autocomplete="new-password" />
+                      <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
+                  </div>
+                    <div class="form-check form-check-info text-left mt-3">
+                      <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
                       <label class="form-check-label" for="flexCheckDefault">
                         I agree the <a href="#" class="text-dark font-weight-bolder">Terms and Conditions</a>
                       </label>

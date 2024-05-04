@@ -19,7 +19,7 @@ class RegisteredUserController extends Controller
      */
     public function create(): View
     {
-        return view('auththem.signup.cover');
+        return view('auth.register');
     }
 
     /**

@@ -16,16 +16,22 @@
                 <div class="card-body">
                   <form role="form" method="POST" action="{{ route('login') }}" class="text-start">
                     @csrf
-                    <label>Email</label>
-                    <div class="mb-3">
-                      <input type="email" id="email" name="email" class="form-control" :value="old('email')" required autofocus autocomplete="username" placeholder="Email" aria-label="Email">
+                    <div>
+                      <x-input-label for="email" :value="__('Email')" />
+                      <x-text-input id="email" class="form-control block mt-1 w-full" type="email" name="email" :value="old('email')" placeholder="Email" aria-label="email" required autofocus autocomplete="username" />
+                      <x-input-error :messages="$errors->get('email')" class="mt-2" />
                     </div>
-                    <label>Password</label>
-                    <div class="mb-3">
-                      <input type="password" id="password" name="password" required autocomplete="current-password" class="form-control" placeholder="Password" aria-label="Password">
+                    <div class="mt-4">
+                        <x-input-label for="password" :value="__('Password')" />
+                        <x-text-input id="password" class="form-control block mt-1 w-full"
+                                        type="password"
+                                        name="password"
+                                        placeholder="Password" aria-label="Password"
+                                        required autocomplete="current-password" />
+                        <x-input-error :messages="$errors->get('password')" class="mt-2" />
                     </div>
-                    <div class="form-check form-switch">
-                      <input class="form-check-input" type="checkbox" id="rememberMe" checked="">
+                    <div class="form-check form-switch mt-4">
+                      <input class="form-check-input" name="remember" type="checkbox" id="rememberMe">
                       <label class="form-check-label" for="rememberMe">Remember me</label>
                     </div>
                     <div class="text-center">
