@@ -50,7 +50,7 @@
                 <div class="card-footer text-center pt-0 px-sm-4 px-1">
                   <p class="mb-4 mx-auto">
                     Already have an account?
-                    <a href="/authentication-signin-cover" class="text-primary text-gradient font-weight-bold">Sign in</a>
+                    <a href="{{route('login')}}" class="text-primary text-gradient font-weight-bold">Sign in</a>
                   </p>
                 </div>
               </div>
