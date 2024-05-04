@@ -1,4 +1,4 @@
-@extends('user_type.auth', ['parentFolder' => 'authentication', 'childFolder' => 'signup', 'hasFooter' => 'footer', 'navbar' => 'cover'])
+@extends('user_type.guest', ['parentFolder' => 'authentication', 'childFolder' => 'signup', 'hasFooter' => 'footer', 'navbar' => 'cover'])
 
 @section('content')
 <!--navbar-->
@@ -14,18 +14,27 @@
                   <p class="mb-0">Enter your email and password to register</p>
                 </div>
                 <div class="card-body pb-3">
-                  <form role="form">
-                    <label>Name</label>
+                  <form role="form" method="POST" action="{{ route('register') }}">
+                    @csrf
+                    <label>First Name</label>
                     <div class="mb-3">
-                      <input type="text" class="form-control" placeholder="Name" aria-label="Name">
+                      <input type="text" name="first_name" class="form-control" placeholder="Name" aria-label="Name">
+                    </div>
+                    <label>Last Name</label>
+                    <div class="mb-3">
+                      <input type="text" name="last_name" class="form-control" placeholder="Name" aria-label="Name">
                     </div>
                     <label>Email</label>
                     <div class="mb-3">
-                      <input type="email" class="form-control" placeholder="Email" aria-label="Email">
+                      <input type="email" name="email" class="form-control" placeholder="Email" aria-label="Email">
                     </div>
                     <label>Password</label>
                     <div class="mb-3">
-                      <input type="password" class="form-control" placeholder="Password" aria-label="Password">
+                      <input type="password" name="password" class="form-control" placeholder="Password" aria-label="Password">
+                    </div>
+                    <label>Confirm Password</label>
+                    <div class="mb-3">
+                      <input type="password" name="password_confirmation" class="form-control" placeholder="Password" aria-label="Password">
                     </div>
                     <div class="form-check form-check-info text-left">
                       <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" checked>
@@ -34,7 +43,7 @@
                       </label>
                     </div>
                     <div class="text-center">
-                      <button type="button" class="btn bg-gradient-primary w-100 mt-4 mb-0">Sign up</button>
+                      <button type="submit" class="btn bg-gradient-primary w-100 mt-4 mb-0">Sign up</button>
                     </div>
                   </form>
                 </div>

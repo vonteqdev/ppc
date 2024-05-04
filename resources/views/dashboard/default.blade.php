@@ -1,5 +1,4 @@
-@extends('user_type.auth', ['parentFolder' => 'dashboards', 'childFolder' => 'none'])
-
+<x-app-layout>
 @section('content')
   <div class="row">
     <div class="col-lg-7 position-relative z-index-2">
@@ -676,3 +675,4 @@
     })();
   </script>
 @endpush
+</x-app-layout>

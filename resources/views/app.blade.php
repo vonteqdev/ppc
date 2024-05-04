@@ -23,7 +23,7 @@
 
   <link rel="apple-touch-icon" sizes="76x76" href="{{ URL::asset('assets/img/apple-icon.png') }}">
   <link rel="icon" type="image/png" href="{{ URL::asset('assets/img/favicon.png') }}">
-  <title>{{ config('app.name', 'Laravel') }}</title>
+  <title>{{ config('app.name', 'Laravel') }} @stack('page_title') </title>
   <!--     Fonts and icons     -->
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
   <!-- Nucleo Icons -->
@@ -35,6 +35,7 @@
   <link href="{{ URL::asset('assets/css/nucleo-svg.css') }}" rel="stylesheet" />
   <!-- CSS Files -->
   <link id="pagestyle" href="{{ URL::asset('assets/css/soft-ui-dashboard.css?v=1.0.4') }}" rel="stylesheet" />
+  @stack('styles')
   @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
@@ -55,7 +56,7 @@
   <!-- Kanban scripts -->
   <script src="{{ URL::asset('assets/js/plugins/dragula/dragula.min.js') }}"></script>
   <script src="{{ URL::asset('assets/js/plugins/jkanban/jkanban.js') }}"></script>
-  @stack('js')
+  @stack('scripts')
   <script>
     var win = navigator.platform.indexOf('Win') > -1;
     if (win && document.querySelector('#sidenav-scrollbar')) {
