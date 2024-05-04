@@ -3,7 +3,7 @@
 </li>
 <li class="nav-item">
     @can('group_access','users_management')
-    <a data-bs-toggle="collapse" href="#pagesExamples" class="nav-link {{ request()->routeIs([]) ? 'active' : '' }}" aria-controls="pagesExamples" role="button" aria-expanded="{{ request()->routeIs([]) ? 'true' : 'false' }}">
+    <a data-bs-toggle="collapse" href="#pagesExamples" class="nav-link {{ request()->routeIs(['users.*']) ? 'active' : '' }}" aria-controls="pagesExamples" role="button" aria-expanded="{{ request()->routeIs(['users.*']) ? 'true' : 'false' }}">
     <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center d-flex align-items-center justify-content-center  me-2">
         <svg width="12px" height="12px" viewBox="0 0 42 42" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
         <title>office</title>
@@ -21,7 +21,7 @@
     </div>
     <span class="nav-link-text ms-1">Management</span>
     </a>
-    <div class="collapse {{ request()->routeIs([]) ? 'show' : '' }}" id="pagesExamples">
+    <div class="collapse {{ request()->routeIs(['users.*', 'roles.*']) ? 'show' : '' }}" id="pagesExamples">
         <ul class="nav ms-4 ps-3">
             @can('role','read_users')
             <li class="nav-item ">
