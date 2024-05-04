@@ -5,7 +5,7 @@
     Users
 @endpush
 <x-app-layout>
-<a href="{{route('users.create')}}" type="button" class="btn btn-liaison btn-sm"><i class="fas fa-plus"></i> Add new User</a>
+<a href="{{route('users.create')}}" type="button" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> Add new User</a>
 <div class="container-fluid mt-4">
     <div class="row">
         <div class="col-12">

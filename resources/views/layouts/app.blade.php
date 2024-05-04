@@ -64,6 +64,7 @@
                                 <span class="nav-link-text ms-1">Dashboard</span>
                             </a>
                         </li>
+                        @role('admin')
                         <li class="nav-item mt-3">
                             <h6 class="ps-4  ms-2 text-uppercase text-xs font-weight-bolder opacity-6">ADMIN</h6>
                         </li>
@@ -84,16 +85,18 @@
                                 </g>
                                 </svg>
                             </div>
+                            @can('group_access','users_management')
                             <span class="nav-link-text ms-1">Management</span>
                             </a>
-                            <div class="collapse {{ request()->routeIs(['users.*']) ? 'show' : '' }}" id="pagesExamples">
+                            <div class="collapse {{ request()->routeIs(['users.*', 'roles.*']) ? 'show' : '' }}" id="pagesExamples">
                                 <ul class="nav ms-4 ps-3">
+                                    @can('role','read_users')
                                     <li class="nav-item ">
-                                        <a class="nav-link" data-bs-toggle="collapse" aria-expanded="{{ request()->routeIs(['users.*']) ? 'true' : 'false' }}" href="#profileExample">
+                                        <a class="nav-link" data-bs-toggle="collapse" aria-expanded="{{ request()->routeIs(['users.*']) ? 'true' : 'false' }}" href="#usersExtend">
                                             <span class="sidenav-mini-icon"> U </span>
                                             <span class="sidenav-normal"> Users <b class="caret"></b></span>
                                         </a>
-                                        <div class="collapse {{ request()->routeIs('users.*') ? 'show' : '' }}" id="profileExample">
+                                        <div class="collapse {{ request()->routeIs('users.*') ? 'show' : '' }}" id="usersExtend">
                                             <ul class="nav nav-sm flex-column">
                                                 <li class="nav-item">
                                                     <a class="nav-link {{ request()->routeIs('users.index') ? 'active' : '' }}" href="{{ route('users.index') }}">
@@ -104,10 +107,30 @@
                                             </ul>
                                         </div>
                                     </li>
+                                    @endcan
+                                    @can('role','read_roles')
+                                    <li class="nav-item ">
+                                        <a class="nav-link" data-bs-toggle="collapse" aria-expanded="{{ request()->routeIs(['roles.*']) ? 'true' : 'false' }}" href="#rolesExtend">
+                                            <span class="sidenav-mini-icon"> R </span>
+                                            <span class="sidenav-normal"> Roles <b class="caret"></b></span>
+                                        </a>
+                                        <div class="collapse {{ request()->routeIs('roles.*') ? 'show' : '' }}" id="rolesExtend">
+                                            <ul class="nav nav-sm flex-column">
+                                                <li class="nav-item">
+                                                    <a class="nav-link {{ request()->routeIs('roles.index') ? 'active' : '' }}" href="{{ route('roles.index') }}">
+                                                    <span class="sidenav-mini-icon text-xs"> M </span>
+                                                    <span class="sidenav-normal"> Manage </span>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                    @endcan
                                 </ul>
                             </div>
+                            @endcan
                         </li>
-
+                        @endrole
                         <li class="nav-item mt-3">
                             <h6 class="ps-4  ms-2 text-uppercase text-xs font-weight-bolder opacity-6">General</h6>
                         </li>
