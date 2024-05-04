@@ -29,6 +29,7 @@ class UserRequest extends FormRequest
             'email' => $this->getMethod() == 'POST' ? 'required|string|email:rfc,dns|max:255|unique:users,email' : 'string|email:rfc,dns|max:255|unique:users,email,'.$this->user?->id,
             'password' => $this->getMethod() == 'POST' ? 'required|string|min:8|confirmed|max:255' : ($this->password != null ? 'sometimes|required|min:8|max:255' : ''),
             'password_confirmation' => $this->getMethod() == 'POST' ? 'required|string|min:8|same:password|max:255' : ($this->password != null ? 'required|string|min:8|same:password|max:255' : ''),
+            'role' => 'required|exists:roles,id'
         ];
     }
 

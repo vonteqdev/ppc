@@ -37,6 +37,16 @@
                                     <input type="password" required name="password_confirmation" class="form-control" id="password_confirmation" />
                                     <span id="error_password_confirmation"></span>
                                 </div>
+                                <div class="form-group">
+                                    <label class="form-control-label" for="role">Role*</label>
+                                    <select name="role" id="role" class="form-control">
+                                        <option value="">Select Role</option>
+                                        @foreach($roles as $role)
+                                            <option value="{{$role->id}}">{{$role->name}}</option>
+                                        @endforeach
+                                    </select>
+                                    <span id="error_role"></span>
+                                </div>
                             </div>
                             <button type="button" class="btn btn-primary" id="submitCreateUserForm">Add User</button>
                         </div>

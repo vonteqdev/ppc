@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Http\Resources\UsersResource;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Spatie\Permission\Models\Role;
 
 
 class UsersController extends Controller
@@ -18,11 +19,14 @@ class UsersController extends Controller
     }
 
     public function create(){
-        return view('users.create');
+        $roles = Role::all();
+        return view('users.create', compact('roles'));
     }
 
     public function store(UserRequest $request){
         $user = User::create($request->validated());
+
+        $user->assignRole($request->role_id);
 
         return response()->json([
             'success' => true,
