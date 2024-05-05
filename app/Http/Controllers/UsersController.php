@@ -36,7 +36,8 @@ class UsersController extends Controller
     }
 
     public function show(User $user){
-        return view('users.show', compact('user'));
+        $roles = Role::all();
+        return view('users.show', compact('user', 'roles'));
     }
 
     public function update(Request $request, User $user){
@@ -52,7 +53,7 @@ class UsersController extends Controller
         $user->first_name = $request->first_name;
         $user->email = $request->email;
         if($request->password) $user->password = Hash::make($request->password);
-        $user->type_id = $request->type_id;
+        $user->syncRoles([$request->role]);
         $user->save();
 
         return response()->json([

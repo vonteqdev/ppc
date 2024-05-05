@@ -30,7 +30,10 @@ class UsersDataTable extends DataTable
             ->addColumn('action',function ($data){
                 return $this->getActionColumn($data);
             })
-            ->setRowId('id')->rawColumns(['action']);
+            ->editColumn('role', function ($data){
+                return $data->roles->first()?->name ?? 'No role';
+            })
+            ->setRowId('id')->rawColumns(['role', 'action']);
     }
 
     /**
@@ -96,6 +99,17 @@ class UsersDataTable extends DataTable
                 'visible' => true,
                 'attributes' => [
                     'data-sort' => 'last_name',
+                ],
+            ],
+            'role' => [
+                'name' => 'role',
+                'title' => 'Role',
+                'data' => 'role',
+                'searchable' => true,
+                'orderable' => true,
+                'visible' => true,
+                'attributes' => [
+                    'data-sort' => 'role',
                 ],
             ],
             'email' => [
