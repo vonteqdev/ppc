@@ -6,6 +6,7 @@ use App\Http\Controllers\UsersController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ImpersonateController;
+use App\Http\Controllers\SetupController;
 
 
 Route::get('/', function () {
@@ -27,6 +28,10 @@ Route::middleware('auth')->group(function () {
 
         Route::get('/impersonate/{user}',           [ImpersonateController::class, 'impersonate'])->name('users.impersonate')->middleware('checkPermissions:impersonate_users');
         Route::get('/stop/impersonate',             [ImpersonateController::class, 'stopImpersonate'])->name('users.stop-impersonate');
+    });
+
+    Route::group(['prefix'=>'setup'], function(){
+        Route::get('/',                             [SetupController::class, 'index'])->name('setup.index')->middleware('checkPermissions:read_setup');
     });
 
     Route::group(['prefix'=>'roles'], function(){

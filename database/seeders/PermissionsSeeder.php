@@ -24,6 +24,7 @@ class PermissionsSeeder extends Seeder
                 'delete_users',
                 'impersonate_users',
             ],
+            'setup' => ['read_setup'],
         ];
 
         foreach($permissionsArray as $key => $permissions) {
