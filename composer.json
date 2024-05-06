@@ -8,6 +8,7 @@
         "php": "^8.2",
         "google/apiclient": "^2.15.0",
         "google/apiclient-services": "^0.352.0",
+        "googleads/google-ads-php": "^23.0",
         "lab404/laravel-impersonate": "^1.7",
         "laravel/framework": "^11.0",
         "laravel/tinker": "^2.9",

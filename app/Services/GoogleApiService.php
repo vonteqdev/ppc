@@ -9,6 +9,9 @@ use Google_Service_Exception;
 use Google\Service\GoogleAnalyticsAdmin;
 use Google\Service\Analytics;
 use stdClass;
+use Google\Ads\GoogleAds\Lib\GoogleAdsBuilder;
+use Google\Ads\GoogleAds\Lib\OAuth2TokenBuilder;
+use App\Models\GoogleAccount;
 
 
 class GoogleApiService {
@@ -112,5 +115,38 @@ class GoogleApiService {
         }
     
         return $accountsArray;
+    }
+
+    public function getGoogleAdsClient($token) {
+        $oauth2Credential = (new OAuth2TokenBuilder())
+            ->withClientId(env('GOOGLE_CLIENT_ID'))
+            ->withClientSecret(env('GOOGLE_CLIENT_SECRET'))
+            ->withRefreshToken($token->refresh_token)
+            ->build();
+
+        return (new GoogleAdsBuilder())
+            ->withDeveloperToken(env('GOOGLE_ADS_DEVELOPER_TOKEN'))
+            ->withOAuth2Credential($oauth2Credential)
+            ->build();
+    }
+
+    public function getProductClicksAndCPC($googleAdsClient, $customerId) {
+        $googleAdsServiceClient = $googleAdsClient->getGoogleAdsServiceClient();
+        $query = "SELECT segments.product_item_id, metrics.clicks, metrics.cost_micros, metrics.average_cpc FROM shopping_performance_view WHERE segments.date DURING LAST_30_DAYS";
+    
+        $response = $googleAdsServiceClient->search($customerId, $query);
+    
+        $productPerformance = [];
+        foreach ($response->iterateAllElements() as $googleAdsRow) {
+            /** @var GoogleAdsRow $googleAdsRow */
+            $productPerformance[] = [
+                'productItemId' => $googleAdsRow->getSegments()->getProductItemId(),
+                'clicks' => $googleAdsRow->getMetrics()->getClicks(),
+                'totalCost' => $googleAdsRow->getMetrics()->getCostMicros() / 1000000,
+                'averageCPC' => $googleAdsRow->getMetrics()->getAverageCpc() / 1000000,
+            ];
+        }
+    
+        return $productPerformance;
     }
 }

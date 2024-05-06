@@ -53,7 +53,6 @@ class SetupController extends Controller
     public function getProperties($token) {
         $google = new GoogleApiService();
         $client = $google->initClient($token);
-        $accountsAndProperties = $google->getAccountsAndProperties($client);
-        return $accountsAndProperties;
+        return $google->getAccountsAndProperties($client);
     }
 }
