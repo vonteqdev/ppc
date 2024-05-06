@@ -13,6 +13,10 @@ class SetupController extends Controller
 {
     public function index(WebsitesDataTable $dataTable)
     {
+        // $token = GoogleAccount::where('user_id', auth()->id())->first();
+        // if ($token) {
+        //     $this->getProperties($token);
+        // }
         return $dataTable->render('setup.index');
     }
 
@@ -44,5 +48,12 @@ class SetupController extends Controller
             'email' => $email
         ]);
         return redirect()->route('setup.index');
+    }
+
+    public function getProperties($token) {
+        $google = new GoogleApiService();
+        $client = $google->initClient($token);
+        $accountsAndProperties = $google->getAccountsAndProperties($client);
+        return $accountsAndProperties;
     }
 }
