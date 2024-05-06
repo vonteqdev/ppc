@@ -2,7 +2,7 @@
 
 namespace App\DataTables;
 
-use App\Models\Website;
+use App\Models\Product;
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Builder as HtmlBuilder;
@@ -13,7 +13,7 @@ use Yajra\DataTables\Html\Editor\Fields;
 use Yajra\DataTables\Services\DataTable;
 use Illuminate\Support\Facades\Session;
 
-class WebsitesDataTable extends DataTable
+class ProductsDataTable extends DataTable
 {
     /**
      * Build the DataTable class.
@@ -22,8 +22,8 @@ class WebsitesDataTable extends DataTable
      */
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
-        if(request()->length != session('websites-table-length')){
-            Session::put('websites-table-length', request()->length);
+        if(request()->length != session('products-table-length')){
+            Session::put('products-table-length', request()->length);
         }
 
         return (new EloquentDataTable($query))
@@ -36,7 +36,7 @@ class WebsitesDataTable extends DataTable
     /**
      * Get the query source of dataTable.
      */
-    public function query(Website $model): QueryBuilder
+    public function query(Product $model): QueryBuilder
     {
         return $model->newQuery();
     }
@@ -48,7 +48,7 @@ class WebsitesDataTable extends DataTable
     {
         return $this->builder()
             ->setTableHeadClass('thead-light')
-            ->setTableId('websites-table')
+            ->setTableId('products-table')
             ->columns($this->getColumns())
             ->minifiedAjax()
             ->orderBy(0,'asc')
@@ -56,7 +56,7 @@ class WebsitesDataTable extends DataTable
             ->parameters([
                 'pagingType' => 'full',
             ])
-            ->pageLength(session('websites-table-length',50));
+            ->pageLength(session('products-table-length',50));
     }
 
     /**
@@ -65,48 +65,70 @@ class WebsitesDataTable extends DataTable
     public function getColumns(): array
     {
         return [
-            'name' => [
-                'name' => 'name',
-                'title' => 'Name',
-                'data' => 'name',
+            'product' => [
+                'name' => 'product',
+                'title' => 'Product',
+                'data' => 'product',
                 'searchable' => true,
                 'orderable' => true,
                 'visible' => true,
                 'attributes' => [
-                    'data-sort' => 'name',
+                    'data-sort' => 'product',
                 ],
             ],
-            'feeds_imported' => [
-                'name' => 'feeds_imported',
-                'title' => 'Feeds Imported',
-                'data' => 'feeds_imported',
+            'category' => [
+                'name' => 'category',
+                'title' => 'Category',
+                'data' => 'category',
                 'searchable' => true,
                 'orderable' => true,
                 'visible' => true,
                 'attributes' => [
-                    'data-sort' => 'feeds_imported',
+                    'data-sort' => 'category',
                 ],
             ],
-            'no_of_products' => [
-                'name' => 'no_of_products',
-                'title' => 'No of Products',
-                'data' => 'no_of_products',
+            'price' => [
+                'name' => 'price',
+                'title' => 'Price',
+                'data' => 'price',
                 'searchable' => true,
                 'orderable' => true,
                 'visible' => true,
                 'attributes' => [
-                    'data-sort' => 'no_of_products',
+                    'data-sort' => 'price',
                 ],
             ],
-            'last_update' => [
-                'name' => 'last_update',
-                'title' => 'Last Update',
-                'data' => 'last_update',
+            'SKU' => [
+                'name' => 'SKU',
+                'title' => 'SKU',
+                'data' => 'SKU',
                 'searchable' => true,
                 'orderable' => true,
                 'visible' => true,
                 'attributes' => [
-                    'data-sort' => 'last_update',
+                    'data-sort' => 'SKU',
+                ],
+            ],
+            'quantity' => [
+                'name' => 'quantity',
+                'title' => 'Quantity',
+                'data' => 'quantity',
+                'searchable' => true,
+                'orderable' => true,
+                'visible' => true,
+                'attributes' => [
+                    'data-sort' => 'quantity',
+                ],
+            ],
+            'status' => [
+                'name' => 'status',
+                'title' => 'Status',
+                'data' => 'status',
+                'searchable' => true,
+                'orderable' => true,
+                'visible' => true,
+                'attributes' => [
+                    'data-sort' => 'status',
                 ],
             ],
             Column::computed('action')
@@ -121,7 +143,7 @@ class WebsitesDataTable extends DataTable
      */
     protected function filename(): string
     {
-        return 'Websites_' . date('YmdHis');
+        return 'Products_' . date('YmdHis');
     }
 
     protected function getActionColumn($data): string

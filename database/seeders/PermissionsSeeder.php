@@ -25,6 +25,12 @@ class PermissionsSeeder extends Seeder
                 'impersonate_users',
             ],
             'setup' => ['read_setup'],
+            'products' => [
+                'read_products',
+                'write_products',
+                'edit_products',
+                'delete_products',
+            ]
         ];
 
         foreach($permissionsArray as $key => $permissions) {

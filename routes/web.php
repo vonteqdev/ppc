@@ -7,6 +7,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ImpersonateController;
 use App\Http\Controllers\SetupController;
+use App\Http\Controllers\ProductsController;
 
 
 Route::get('/', function () {
@@ -41,6 +42,15 @@ Route::middleware('auth')->group(function () {
         Route::get('/{role}',           [RoleController::class, 'show'])->name('roles.show')->middleware('checkPermissions:read_roles');
         Route::put('/{role}',           [RoleController::class, 'update'])->name('roles.update')->middleware('checkPermissions:edit_roles');
         Route::delete('/{role}',        [RoleController::class, 'destroy'])->name('roles.destroy')->middleware('checkPermissions:delete_roles');
+    });
+
+    Route::group(['prefix'=>'products'], function(){
+        Route::get('/',                 [ProductsController::class, 'index'])->name('products.index')->middleware('checkPermissions:read_products');
+        Route::get('/create',           [ProductsController::class, 'create'])->name('products.create')->middleware('checkPermissions:write_products');
+        Route::post('/create',          [ProductsController::class, 'store'])->name('products.store')->middleware('checkPermissions:write_products');
+        Route::get('/{product}',        [ProductsController::class, 'show'])->name('products.show')->middleware('checkPermissions:read_products');
+        Route::put('/{product}',        [ProductsController::class, 'update'])->name('products.update')->middleware('checkPermissions:edit_products');
+        Route::delete('/{product}',     [ProductsController::class, 'destroy'])->name('products.destroy')->middleware('checkPermissions:delete_products');
     });
     
     Route::group(['prefix'=>'permissions'], function(){

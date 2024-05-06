@@ -48,27 +48,5 @@ function deleteRole(id) {
     });
 }
 </script>
-    <script>
-        $(document).ready(function() {
-            function updateCurrentPageValue() {
-                let info = window.LaravelDataTables["roles-table"].page.info();
-                if(info.recordsTotal <= info.length){
-                    $('#roles-table_paginate').hide();
-                    return;
-                }
-                $('#roles-table_paginate').show();
-                let currentPage = info.page + 1;
-                let totalPages = info.pages;
-                let string = currentPage + ' of ' + totalPages
-                $('#noOfResults').replaceWith(string);
-            }
-            $('#roles-table').on('draw.dt', function() {
-                updateCurrentPageValue();
-            });
-            $('#roles-table').on('page.dt', function() {
-                updateCurrentPageValue();
-            });
-        });
-    </script>
 @endpush
 </x-app-layout>

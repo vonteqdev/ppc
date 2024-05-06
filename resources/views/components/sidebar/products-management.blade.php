@@ -2,7 +2,7 @@
     <h6 class="ps-4  ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Products Management</h6>
 </li>
 <li class="nav-item">
-    <a data-bs-toggle="collapse" href="#productsExtend" class="nav-link {{ request()->routeIs([]) ? 'active' : '' }}" aria-controls="productsExtend" role="button" aria-expanded="{{ request()->routeIs(['users.*']) ? 'true' : 'false' }}">
+    <a data-bs-toggle="collapse" href="#productsExtend" class="nav-link {{ request()->routeIs(['products.*']) ? 'active' : '' }}" aria-controls="productsExtend" role="button" aria-expanded="{{ request()->routeIs(['products.*']) ? 'true' : 'false' }}">
     <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center d-flex align-items-center justify-content-center  me-2">
         <svg width="12px" height="12px" viewBox="0 0 42 42" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
         <title>office</title>
@@ -20,10 +20,10 @@
     </div>
     <span class="nav-link-text ms-1">Products</span>
     </a>
-    <div class="collapse {{ request()->routeIs([]) ? 'show' : '' }}" id="productsExtend">
+    <div class="collapse {{ request()->routeIs(['products.*']) ? 'show' : '' }}" id="productsExtend">
         <ul class="nav ms-4 ps-3">
-            <li class="nav-item">
-                <a class="nav-link" href="javascript:void(0);">
+            <li class="nav-item {{ request()->routeIs('products.index') ? 'active' : '' }}">
+                <a class="nav-link" href="{{route('products.index')}}">
                     <span class="sidenav-mini-icon"> L </span>
                     <span class="sidenav-normal"> List </span>
                 </a>
