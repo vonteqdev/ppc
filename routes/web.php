@@ -33,6 +33,8 @@ Route::middleware('auth')->group(function () {
 
     Route::group(['prefix'=>'setup'], function(){
         Route::get('/',                             [SetupController::class, 'index'])->name('setup.index')->middleware('checkPermissions:read_setup');
+        Route::get('/init-auth/{type}',             [SetupController::class, 'initAuth'])->name('setup.init-auth');
+        Route::get('/auth-callback',                [SetupController::class, 'authCallback'])->name('setup.auth-callback');
     });
 
     Route::group(['prefix'=>'roles'], function(){
