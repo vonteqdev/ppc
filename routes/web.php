@@ -35,6 +35,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/',                             [SetupController::class, 'index'])->name('setup.index')->middleware('checkPermissions:read_setup');
         Route::get('/init-auth/{type}',             [SetupController::class, 'initAuth'])->name('setup.init-auth');
         Route::get('/auth-callback',                [SetupController::class, 'authCallback'])->name('setup.auth-callback');
+        Route::delete('/remove-account',            [SetupController::class, 'removeAccount'])->name('setup.remove-account');
     });
 
     Route::group(['prefix'=>'roles'], function(){

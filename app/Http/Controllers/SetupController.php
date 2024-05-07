@@ -20,6 +20,11 @@ class SetupController extends Controller
         return $dataTable->render('setup.index');
     }
 
+    public function removeAccount() {
+        auth()->user()->google_account()->delete();
+        return response()->json(['success' => true, 'message' => 'Account removed successfully']);
+    }
+
     public function initAuth($type) {
         $google = new GoogleApiService();
         return redirect($google->generateAuthLink());

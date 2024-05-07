@@ -27,10 +27,12 @@ class GoogleApiService {
             'https://www.googleapis.com/auth/analytics.readonly',
             GoogleAnalyticsAdmin::ANALYTICS_READONLY,
             Analytics::ANALYTICS_READONLY,
+            'https://www.googleapis.com/auth/content'
         ]);
         $client->setClientId(env('GOOGLE_CLIENT_ID'));
         $client->setClientSecret(env('GOOGLE_CLIENT_SECRET'));
         $client->setRedirectUri(env('GOOGLE_REDIRECT_URI'));
+        // $client->setIncludeGrantedScopes(true); 
         $client->setAccessType('offline');
         $client->setAccessToken($token->access_token);
         if ($client->isAccessTokenExpired()) {
@@ -51,6 +53,9 @@ class GoogleApiService {
             Google_Service_Oauth2::USERINFO_PROFILE,
             'https://www.googleapis.com/auth/analytics',
             'https://www.googleapis.com/auth/analytics.readonly',
+            GoogleAnalyticsAdmin::ANALYTICS_READONLY,
+            Analytics::ANALYTICS_READONLY,
+            'https://www.googleapis.com/auth/content'
         ]);
         $client->setApprovalPrompt('force');
         $client->setClientId(env('GOOGLE_CLIENT_ID'));
