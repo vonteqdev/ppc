@@ -7,6 +7,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ImpersonateController;
 use App\Http\Controllers\SetupController;
+use App\Http\Controllers\ImportController;
 use App\Http\Controllers\ProductsController;
 
 
@@ -36,6 +37,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/init-auth/{type}',             [SetupController::class, 'initAuth'])->name('setup.init-auth');
         Route::get('/auth-callback',                [SetupController::class, 'authCallback'])->name('setup.auth-callback');
         Route::delete('/remove-account',            [SetupController::class, 'removeAccount'])->name('setup.remove-account');
+        Route::post('/import-xml',                  [ImportController::class, 'importXML'])->name('setup.import-xml');
     });
 
     Route::group(['prefix'=>'roles'], function(){
