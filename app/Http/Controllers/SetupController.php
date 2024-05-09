@@ -15,7 +15,9 @@ class SetupController extends Controller
     {
         // $token = GoogleAccount::where('user_id', auth()->id())->first();
         // if ($token) {
-        //     $this->getProperties($token);
+        //     $google = new GoogleApiService();
+        //     $client = $google->initClient($token);
+        //     dd($google->listMerchantProducts($client, '104825572'));
         // }
         return $dataTable->render('setup.index');
     }

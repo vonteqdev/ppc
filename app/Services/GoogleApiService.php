@@ -12,6 +12,7 @@ use stdClass;
 use Google\Ads\GoogleAds\Lib\GoogleAdsBuilder;
 use Google\Ads\GoogleAds\Lib\OAuth2TokenBuilder;
 use App\Models\GoogleAccount;
+use Google\Service\ShoppingContent;
 
 
 class GoogleApiService {
@@ -154,4 +155,49 @@ class GoogleApiService {
     
         return $productPerformance;
     }
+
+
+    // MERCHANT CENTER API
+    public function listMerchantProducts($client, $merchantId) {
+        $shoppingService = new ShoppingContent($client);
+        $products = [];
+        $nextPageToken = null;
+    
+        do {
+            try {
+                $response = $shoppingService->products->listProducts($merchantId, ['pageToken' => $nextPageToken]);
+                foreach ($response->getResources() as $product) {
+                    dd($product);
+                    $products[] = [
+                        'id' => $product->getId(),
+                        'title' => $product->getTitle(),
+                        'description' => $product->getDescription(),
+                        'link' => $product->getLink(),
+                        'imageLink' => $product->getImageLink(),
+                        'price' => $product->getPrice(),
+                        'brand' => $product->getBrand(),
+                        'condition' => $product->getCondition(),
+                        'availability' => $product->getAvailability(),
+                        'gtin' => $product->getGtin(),
+                        'mpn' => $product->getMpn(),
+                        'googleProductCategory' => $product->getGoogleProductCategory(),
+                        'expirationDate' => $product->getExpirationDate(),
+                        'channel' => $product->getChannel(),
+                        'contentLanguage' => $product->getContentLanguage(),
+                        'targetCountry' => $product->getTargetCountry(),
+                        'offerId' => $product->getOfferId(),
+                        'salePrice' => $product->getSalePrice(),
+                        'salePriceEffectiveDate' => $product->getSalePriceEffectiveDate(),
+                        'unitPricingMeasure' => $product->getUnitPricingMeasure(),
+                        'unitPricingBaseMeasure' => $product->getUnitPricingBaseMeasure(),
+                    ];
+                }
+                $nextPageToken = $response->getNextPageToken();
+            } catch (\Exception $e) {
+                return 'Error: ' . $e->getMessage();
+            }
+        } while ($nextPageToken);
+    
+        return $products;
+    }    
 }
