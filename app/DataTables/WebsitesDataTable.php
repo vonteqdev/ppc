@@ -30,6 +30,15 @@ class WebsitesDataTable extends DataTable
             ->addColumn('action',function ($data){
                 return $this->getActionColumn($data);
             })
+            ->editColumn('last_update',function ($data){
+                return 0;
+            })
+            ->editColumn('feeds_imported',function ($data){
+                return 0;
+            })
+            ->editColumn('no_of_products',function ($data){
+                return 0;
+            })
             ->setRowId('id')->rawColumns(['action']);
     }
 

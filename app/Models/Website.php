@@ -5,14 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class GoogleAccount extends Model
+class Website extends Model
 {
     use HasFactory;
 
     protected $guarded = ['id'];
-
-    public function analyticsAccounts()
-    {
-        return $this->hasMany(GoogleAnalyticsAccount::class);
-    }
 }
