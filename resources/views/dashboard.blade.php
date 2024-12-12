@@ -6,9 +6,9 @@
 @endpush
 <x-app-layout>
 <div class="row">
-Hi {{auth()->user()->first_name}}
+Hi {{auth()->user()->first_name}} test
 </div>
-@push('js')  
+@push('js')
   <script src="{{ URL::asset('assets/js/plugins/chartjs.min.js') }}"></script>
   <script src="{{ URL::asset('assets/js/plugins/threejs.js') }}"></script>
   <script src="{{ URL::asset('assets/js/plugins/orbit-controls.js') }}"></script>
