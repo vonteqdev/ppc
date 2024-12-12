@@ -102,6 +102,7 @@ class GoogleApiService {
     
             foreach ($ga4Properties as $property) {
                 $propertyObj = new \stdClass();
+                $propertyObj->id = $property->propertyId;
                 $propertyObj->name = $property->name;
                 $propertyObj->displayName = $property->displayName;
                 $propertyObj->type = 'GA4';
@@ -112,6 +113,7 @@ class GoogleApiService {
                 $propertyObj = new \stdClass();
                 $propertyObj->id = $property->getId();
                 $propertyObj->name = $property->getName();
+                $propertyObj->displayName = $property->getWebsiteUrl();
                 $propertyObj->type = 'UA';
                 $propertyArray[] = $propertyObj;
             }

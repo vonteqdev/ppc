@@ -35699,3 +35699,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   cursor: default !important;
 }
 /*# sourceMappingURL=dashboard-pro.css.map */
+
+input.loadingInput {
+  background: url(http://www.xiconeditor.com/image/icons/loading.gif) no-repeat right center;
+}
