@@ -51,18 +51,4 @@ class User extends Authenticatable
     public function google_account() {
         return $this->hasOne(GoogleAccount::class);
     }
-
-    public function websites() {
-        return $this->hasMany(Website::class);
-    }
-
-    public function getAllGoogleAnalyticsProperties() {
-        return $this->google_account->analyticsAccounts->map(function ($account) {
-            return $account->properties;
-        })->flatten();
-    }
-
-    public function readyToAddWebsite() {
-        return $this->google_account()->exists() && $this->google_account->analyticsAccounts()->exists() && $this->google_account->analyticsAccounts->first()->properties()->exists();
-    }
 }

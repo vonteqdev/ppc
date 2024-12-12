@@ -38,8 +38,6 @@ Route::middleware('auth')->group(function () {
         Route::get('/auth-callback',                [SetupController::class, 'authCallback'])->name('setup.auth-callback');
         Route::delete('/remove-account',            [SetupController::class, 'removeAccount'])->name('setup.remove-account');
         Route::post('/import-xml',                  [ImportController::class, 'importXML'])->name('setup.import-xml');
-        Route::post('/add-website',                 [SetupController::class, 'addWebsite'])->name('setup.add-website');
-        Route::delete('/remove-website/{website}',  [SetupController::class, 'removeWebsite'])->name('setup.remove-website');
     });
 
     Route::group(['prefix'=>'roles'], function(){
