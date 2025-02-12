@@ -1,5 +1,65 @@
 <x-app-layout>
     <div class="container-fluid py-4">
+
+        <div class="card-body">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Labels</th>
+                        <th>ROAS</th>
+                        <th>Revenue</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($products as $product)
+                        <tr>
+                            <td>{{ $product->name }}</td>
+                            <td>
+                                @foreach ($product->labels as $label)
+                                    <span class="badge bg-primary">{{ $label->label }}</span>
+                                @endforeach
+                            </td>
+                            <td>{{ number_format($product->labels->where('label', 'High ROAS')->count() ? 'High' : 'Low', 2) }}</td>
+                            <td>${{ number_format($product->orders->sum('total_price'), 2) }}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+
+        <div class="card-body">
+            <form action="{{ route('feed-management.export') }}" method="POST">
+                @csrf
+                <div class="mb-3">
+                    <label class="form-label">Feed Name</label>
+                    <input type="text" name="name" class="form-control" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Platform</label>
+                    <select name="platform" class="form-control">
+                        <option value="google">Google</option>
+                        <option value="facebook">Facebook</option>
+                        <option value="tiktok">TikTok</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Filters (Optional)</label>
+                    <select name="filters[label]" class="form-control">
+                        <option value="">Select Label</option>
+                        @foreach ($labels as $label)
+                            <option value="{{ $label }}">{{ $label }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Create Export</button>
+            </form>
+        </div>
+
+
         <div class="card">
             <div class="card-header pb-0">
                 <h6>Feed Management</h6>

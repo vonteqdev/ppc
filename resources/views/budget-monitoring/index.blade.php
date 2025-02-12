@@ -31,5 +31,47 @@
             @endforeach
         </div>
     </div>
+
+
+    <div class="card">
+        <div class="card-header pb-0">
+            <h6>Budget Trends</h6>
+            <small>Track ad spend over time.</small>
+        </div>
+        <div class="card-body">
+            <canvas id="budgetForecastChart"></canvas>
+        </div>
+    </div>
+
+    <ul class="list-group">
+        @foreach ($budgetSuggestions as $platform => $suggestion)
+            <li class="list-group-item d-flex justify-content-between">
+                {{ $platform }} <span class="badge bg-primary">{{ $suggestion }}</span>
+            </li>
+        @endforeach
+    </ul>
+
+
 </div>
+
+@push('scripts')
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    var ctx = document.getElementById("budgetForecastChart").getContext("2d");
+    new Chart(ctx, {
+        type: "line",
+        data: {
+            labels: @json($budgetTrends->pluck('day')),
+            datasets: [{
+                label: "Total Ad Spend",
+                data: @json($budgetTrends->pluck('total_spent')),
+                borderColor: "#FF9900",
+                fill: false
+            }]
+        }
+    });
+});
+</script>
+@endpush
+
 </x-app-layout>

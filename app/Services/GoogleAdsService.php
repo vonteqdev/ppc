@@ -33,14 +33,7 @@ class GoogleAdsService
             ])->get($url);
 
             if ($response->successful()) {
-                $data = $response->json();
-
-                return [
-                    'total_budget' => $data['budget']['total'] ?? 0,
-                    'spent' => $data['budget']['spent'] ?? 0,
-                    'remaining' => ($data['budget']['total'] ?? 0) - ($data['budget']['spent'] ?? 0),
-                    'percentage_spent' => ($data['budget']['total'] > 0) ? round(($data['budget']['spent'] / $data['budget']['total']) * 100, 2) : 0,
-                ];
+                return $response->json();
             }
 
             \Log::error("Google Ads API Error: " . $response->body());
@@ -61,6 +54,3 @@ class GoogleAdsService
         ];
     }
 }
-
-
-

@@ -15,6 +15,8 @@ return new class extends Migration {
                 $table->string('export_url');
                 $table->json('columns');
                 $table->json('filters')->nullable();
+                $table->json('label_filters')->nullable(); // Filter feeds by specific labels (e.g., "High Revenue", "Trending")
+
                 $table->timestamps();
             });
         }
@@ -22,7 +24,9 @@ return new class extends Migration {
 
     public function down()
     {
-        Schema::dropIfExists('feed_exports');
+        Schema::table('feed_exports', function (Blueprint $table) {
+            $table->dropColumn('label_filters');
+        });
     }
 };
 

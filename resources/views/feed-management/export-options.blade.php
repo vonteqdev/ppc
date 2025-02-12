@@ -2,18 +2,18 @@
     <div class="container-fluid py-4">
         <div class="card">
             <div class="card-header pb-0">
-                <h6>Feed Export Options</h6>
-                <small>Customize your feed export settings.</small>
+                <h6>Export Options</h6>
+                <small>Manage and configure feed export settings.</small>
             </div>
             <div class="card-body">
-                <form method="POST" action="{{ route('feed-management.update-export-options') }}">
-                    @csrf
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="include_labels" value="1" checked>
-                        <label class="form-check-label">Include Product Labels in Feed</label>
-                    </div>
-                    <button type="submit" class="btn btn-primary mt-3">Save Options</button>
-                </form>
+                <ul class="list-group">
+                    @foreach ($exports as $export)
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span>{{ $export->name }} ({{ ucfirst($export->platform) }})</span>
+                            <a href="{{ route('feed-management.generateExport', ['platform' => $export->platform, 'name' => $export->name]) }}" class="btn btn-sm btn-primary">Generate Feed</a>
+                        </li>
+                    @endforeach
+                </ul>
             </div>
         </div>
     </div>

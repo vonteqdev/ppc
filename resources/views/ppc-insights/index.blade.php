@@ -33,6 +33,16 @@
                     </tbody>
                 </table>
             </div>
+
+            <div class="card">
+                <div class="card-header pb-0">
+                    <h6>ROAS Comparison</h6>
+                </div>
+                <div class="card-body">
+                    <canvas id="roasComparisonChart"></canvas>
+                </div>
+            </div>
+
         </div>
     </div>
 

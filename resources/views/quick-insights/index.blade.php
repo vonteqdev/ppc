@@ -61,5 +61,27 @@
                 </div>
             </div>
         </div>
+
+
+        <div class="card">
+            <div class="card-header pb-0">
+                <h6>PPC Recommendations</h6>
+                <small>AI-based insights for campaign optimization.</small>
+            </div>
+            <div class="card-body">
+                <ul class="list-group">
+                    @foreach ($recommendations as $recommendation)
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span>
+                                <strong>{{ $recommendation->platform }}</strong> - {{ $recommendation->ad_name }}
+                                <br>
+                                <small>{{ $recommendation->message }}</small>
+                            </span>
+                            <span class="badge bg-primary">{{ $recommendation->recommendation_type }}</span>
+                        </li>
+                    @endforeach
+                </ul>
+            </div>
+        </div>
     </div>
 </x-app-layout>

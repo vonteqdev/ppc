@@ -3,10 +3,14 @@
     @foreach ($products as $product)
     <product>
         <id>{{ $product->id }}</id>
-        <title>{{ $product->title }}</title>
+        <name>{{ $product->name }}</name>
         <price>{{ $product->price }}</price>
         <availability>{{ $product->availability }}</availability>
-        <custom_label>{{ $product->custom_label }}</custom_label>
+        <labels>
+            @foreach ($product->labels as $label)
+            <label>{{ $label }}</label>
+            @endforeach
+        </labels>
     </product>
     @endforeach
 </feed>

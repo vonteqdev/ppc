@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\FeedImport;
 use App\Models\FeedExport;
+use App\Models\ProductLabel;
+
 use App\Services\FeedManagementService;
 use Illuminate\Support\Facades\Storage;
 
@@ -32,6 +34,13 @@ class FeedManagementController extends Controller
             ]
         ]);
     }
+
+    public function showLabels()
+    {
+        $products = Product::with('labels')->get();
+        return view('feed-management.labeling-dashboard', compact('products'));
+    }
+
 
     /**
      * Handle file upload for importing a feed.
@@ -110,11 +119,7 @@ class FeedManagementController extends Controller
      */
     public function generateExport($platform, $name)
     {
-        $feed = FeedExport::where('platform', $platform)->where('name', $name)->firstOrFail();
-        $products = $this->feedService->applyFilters($feed);
-
-        $xml = view('feed-management.export-template', compact('products'))->render();
-
+        $xml = $this->feedService->generateExportFeed($platform);
         return response($xml)->header('Content-Type', 'application/xml');
     }
 
@@ -128,5 +133,15 @@ class FeedManagementController extends Controller
 
         return redirect()->back()->with('success', 'Export options updated.');
     }
+
+    /**
+     * Display the export options page.
+     */
+    public function exportOptions()
+    {
+        $exports = FeedExport::all(); // Fetch all export configurations
+        return view('feed-management.export-options', compact('exports'));
+    }
+
 }
 

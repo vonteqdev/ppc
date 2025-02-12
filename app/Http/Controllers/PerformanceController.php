@@ -39,19 +39,18 @@ class PerformanceController extends Controller
     }
 
     public function metaAds()
-    {
-        $metaAdsService = new MetaAdsService();
+{
+    $data = $this->metaAdsService->getSummary() ?? [
+        'clicks' => 0,
+        'impressions' => 0,
+        'reach' => 0,
+        'spend' => 0,
+        'dates' => [],
+    ];
 
-        $data = $metaAdsService->getSummary() ?? [
-            'clicks' => 0,
-            'impressions' => 0,
-            'reach' => 0,
-            'spend' => 0,
-            'dates' => [],
-        ];
+    return view('performance.meta-ads', compact('data'));
+}
 
-        return view('performance.meta-ads', compact('data'));
-    }
 
     public function tiktokAds()
     {
@@ -61,7 +60,13 @@ class PerformanceController extends Controller
 
     public function ga4()
     {
-        $data = $this->ga4Service->getSummary();
+        $rawData = $this->ga4Service->getSummary() ?? [];
+
+        $data = [
+            'traffic_trend' => $rawData['traffic_trend'] ?? [],
+            'top_pages' => $rawData['top_pages'] ?? [],
+        ];
+
         return view('performance.ga4', compact('data'));
     }
 
