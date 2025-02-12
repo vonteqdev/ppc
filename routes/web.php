@@ -14,7 +14,38 @@ use App\Http\Controllers\QuickInsightsController;
 use App\Http\Controllers\BudgetMonitoringController;
 use App\Http\Controllers\PerformanceController;
 use App\Http\Controllers\FeedManagementController;
+use App\Http\Controllers\FeedAnalyticsController;
+use App\Http\Controllers\ProfitabilityController;
+use App\Http\Controllers\LabelingRuleController;
+use App\Http\Controllers\FeedLabelingController;
+use App\Http\Controllers\PpcInsightsController;
+use App\Http\Controllers\ReportController;
 
+Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
+Route::post('/reports/store', [ReportController::class, 'store'])->name('reports.store');
+
+
+
+Route::get('/ppc-insights', [PpcInsightsController::class, 'index'])->name('ppc-insights.index');
+Route::post('/ppc-insights/fetch', [PpcInsightsController::class, 'fetch'])->name('ppc-insights.fetch');
+
+
+Route::get('/feed-management/labeling-dashboard', [FeedLabelingController::class, 'index'])->name('feed-management.labeling-dashboard');
+Route::post('/feed-management/analyze-labels', [FeedLabelingController::class, 'analyze'])->name('feed-management.analyze-labels');
+
+Route::get('/feed-management/export-options', [FeedManagementController::class, 'exportOptions'])->name('feed-management.export-options');
+Route::post('/feed-management/update-export-options', [FeedManagementController::class, 'updateExportOptions'])->name('feed-management.update-export-options');
+
+
+Route::get('/labeling-rules', [LabelingRuleController::class, 'index'])->name('labeling-rules.index');
+Route::post('/labeling-rules', [LabelingRuleController::class, 'store'])->name('labeling-rules.store');
+Route::delete('/labeling-rules/{id}', [LabelingRuleController::class, 'destroy'])->name('labeling-rules.destroy');
+
+
+Route::get('/feed-analytics', [FeedAnalyticsController::class, 'index'])->name('feed-analytics');
+
+Route::get('/profitability', [ProfitabilityController::class, 'index'])->name('profitability.index');
+Route::post('/profitability/analyze', [ProfitabilityController::class, 'analyze'])->name('profitability.analyze');
 
 
 Route::get('/', function () {
@@ -23,7 +54,8 @@ Route::get('/', function () {
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-Route::get('/quick-insights', [QuickInsightsController::class, 'index'])->name('quick-insights');
+Route::get('/quick-insights', [QuickInsightsController::class, 'index'])->name('quick-insights.index');
+Route::post('/quick-insights/{id}/mark-as-read', [QuickInsightsController::class, 'markAsRead']);
 
 Route::get('/budget-monitoring', [BudgetMonitoringController::class, 'index'])->name('budget-monitoring');
 
@@ -32,13 +64,17 @@ Route::prefix('/performance')->group(function () {
     Route::get('/meta-ads', [PerformanceController::class, 'metaAds'])->name('performance.meta-ads');
     Route::get('/tiktok-ads', [PerformanceController::class, 'tiktokAds'])->name('performance.tiktok-ads');
     Route::get('/ga4', [PerformanceController::class, 'ga4'])->name('performance.ga4');
-    //Route::get('/gsc', [PerformanceController::class, 'gsc'])->name('performance.gsc');
-    Route::get('/performance/gsc', [PerformanceController::class, 'gsc'])->name('performance.gsc');
+    Route::get('/gsc', [PerformanceController::class, 'gsc'])->name('performance.gsc');
 
 });
 
-Route::get('/feed-management', [FeedManagementController::class, 'index'])->name('feed-management');
-Route::post('/feed-management/generate', [FeedManagementController::class, 'generateFeed'])->name('feed.generate');
+Route::get('/feed-management', [FeedManagementController::class, 'index'])->name('feed-management.index');
+Route::post('/feed-management/import', [FeedManagementController::class, 'importFeed'])->name('feed-management.import');
+Route::get('/feed-management/fetch', [FeedManagementController::class, 'fetchFeeds'])->name('feed-management.fetch');
+Route::post('/feed-management/export', [FeedManagementController::class, 'createExport'])->name('feed-management.export');
+Route::get('/export/{platform}/{name}.xml', [FeedManagementController::class, 'generateExport'])->name('feed-management.generateExport');
+
+
 
 
 Route::middleware('auth')->group(function () {

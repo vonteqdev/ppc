@@ -11,12 +11,17 @@ class BudgetMonitoringController extends Controller
 {
     public function index()
     {
-        $spendingData = [
-            'Google Ads' => GoogleAdsService::getSummary()['total_spent'] ?? 0,
-            'Meta Ads' => MetaAdsService::getSummary()['total_spent'] ?? 0,
-            'TikTok Ads' => TikTokAdsService::getSummary()['total_spent'] ?? 0,
-        ];
+        $googleAdsBudget = GoogleAdsService::getBudgetSummary();
+        $metaAdsBudget = MetaAdsService::getBudgetSummary();
+        $tiktokAdsBudget = TikTokAdsService::getBudgetSummary();
 
-        return view('budget-monitoring.index', compact('spendingData'));
+        $totalBudget = $googleAdsBudget['budget'] + $metaAdsBudget['budget'] + $tiktokAdsBudget['budget'];
+        $totalSpent = $googleAdsBudget['spent'] + $metaAdsBudget['spent'] + $tiktokAdsBudget['spent'];
+        $totalPercentage = $totalBudget > 0 ? ($totalSpent / $totalBudget) * 100 : 0;
+
+        return view('budget-monitoring.index', compact(
+            'googleAdsBudget', 'metaAdsBudget', 'tiktokAdsBudget',
+            'totalBudget', 'totalSpent', 'totalPercentage'
+        ));
     }
 }

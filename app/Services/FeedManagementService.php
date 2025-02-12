@@ -1,113 +1,137 @@
 <?php
-
 namespace App\Services;
 
+use App\Models\FeedImport;
+use App\Models\FeedExport;
 use App\Models\Product;
+use App\Models\ProductLabel;
+use App\Models\FeedErrorLog;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 use SimpleXMLElement;
+use Illuminate\Support\Facades\View;
 
 class FeedManagementService
 {
-    public static function getAllFeeds()
+    /**
+     * Validate the feed format (XML/CSV).
+     */
+    public function validateFeed($source, $type)
     {
-        return [
-            ['name' => 'Google Shopping Feed', 'type' => 'google'],
-            ['name' => 'Facebook Catalog Feed', 'type' => 'facebook']
-        ];
+        try {
+            if ($type == 'xml') {
+                $xmlContent = file_get_contents($source);
+                new SimpleXMLElement($xmlContent);
+            } elseif ($type == 'csv') {
+                $csvData = file_get_contents($source);
+                if (!str_contains($csvData, ',')) {
+                    return false;
+                }
+            }
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
     }
 
-    public static function generateFeed($feedType)
+    /**
+     * Auto-fetch feeds based on frequency (hourly, daily, weekly).
+     */
+    public function fetchScheduledFeeds()
     {
-        $products = Product::all();
-        $xml = new SimpleXMLElement('<feed/>');
-        $invalidProducts = [];
+        Log::info("Starting scheduled feed fetch...");
+        $feeds = FeedImport::all();
+        $now = Carbon::now();
 
-        foreach ($products as $product) {
-            $cleanedProduct = self::cleanProductData($product);
+        foreach ($feeds as $feed) {
+            if ($this->shouldFetch($feed, $now)) {
+                Log::info("Fetching feed: " . $feed->name);
 
-            if (self::isValidProduct($cleanedProduct)) {
-                $item = $xml->addChild('product');
-                $item->addChild('id', $cleanedProduct['id']);
-                $item->addChild('title', $cleanedProduct['title']);
-                $item->addChild('price', $cleanedProduct['price']);
-                $item->addChild('gtin', $cleanedProduct['gtin']);
-                $item->addChild('custom_labels', self::applyCustomLabel($cleanedProduct));
-            } else {
-                $invalidProducts[] = [
-                    'title' => $cleanedProduct['title'],
-                    'error' => 'Missing or invalid data'
-                ];
+                // Simulating feed update
+                $feed->last_fetched_at = $now;
+                $feed->save();
+
+                Log::info("Successfully updated: " . $feed->name);
             }
         }
 
-        return response($xml->asXML(), 200)->header('Content-Type', 'text/xml');
+        Log::info("Feed fetching completed.");
     }
 
-    private static function applyCustomLabel($product)
+    /**
+     * Determine if the feed should be updated based on frequency.
+     */
+    private function shouldFetch($feed, $now)
     {
-        $labels = [];
-
-        // Revenue Label
-        if ($product['roas'] > 5) {
-            $labels[] = 'High Revenue';
-        } elseif ($product['roas'] > 3) {
-            $labels[] = 'Medium Revenue';
-        } else {
-            $labels[] = 'Low Revenue';
+        if (!$feed->last_fetched_at) {
+            return true;
         }
 
-        // Profitability Label
-        if ($product['profit_margin'] > 20) {
-            $labels[] = 'High Profit';
-        } elseif ($product['profit_margin'] > 10) {
-            $labels[] = 'Medium Profit';
-        } else {
-            $labels[] = 'Low Profit';
-        }
+        $lastFetched = Carbon::parse($feed->last_fetched_at);
 
-        // CTR Label
-        if ($product['ctr'] > 5) {
-            $labels[] = 'High CTR';
-        } elseif ($product['ctr'] > 2) {
-            $labels[] = 'Medium CTR';
-        } else {
-            $labels[] = 'Low CTR';
+        switch ($feed->frequency) {
+            case 'hourly':
+                return $lastFetched->diffInHours($now) >= 1;
+            case 'daily':
+                return $lastFetched->diffInDays($now) >= 1;
+            case 'weekly':
+                return $lastFetched->diffInDays($now) >= 7;
+            default:
+                return false;
         }
-
-        // Trending Products
-        if ($product['roas'] > 5 && $product['ctr'] > 5) {
-            $labels[] = 'Upward Trend';
-        } elseif ($product['roas'] < 2 && $product['ctr'] < 1) {
-            $labels[] = 'Downward Trend';
-        } else {
-            $labels[] = 'Newcomer';
-        }
-
-        return implode(', ', $labels);
     }
 
-    private static function cleanProductData($product)
+    /**
+     * Apply filters to product feed before exporting.
+     */
+    public function applyFilters($feed)
     {
-        return [
-            'id' => trim($product->id),
-            'title' => ucwords(strtolower(trim($product->title))), // Fix capitalization
-            'price' => number_format($product->price, 2, '.', ''), // Ensure decimal format
-            'gtin' => self::validateGTIN($product->gtin), // Validate GTIN
-            'roas' => $product->roas ?? 0,
-            'profit_margin' => $product->profit_margin ?? 0,
-            'ctr' => $product->ctr ?? 0
-        ];
-    }
+        $products = Product::all()->toArray();
 
-    private static function validateGTIN($gtin)
-    {
-        if (empty($gtin) || !ctype_digit($gtin) || strlen($gtin) < 8) {
-            return 'Invalid GTIN';
+        if ($feed->filters) {
+            $filters = json_decode($feed->filters, true);
+            foreach ($filters as $filter) {
+                $products = array_filter($products, function ($product) use ($filter) {
+                    return eval("return {$product[$filter['field']]} {$filter['operator']} {$filter['value']};");
+                });
+            }
         }
-        return $gtin;
+
+        return $products;
     }
 
-    private static function isValidProduct($product)
+    /**
+     * Generate Feed Export with Product Labels & Custom Filtering.
+     */
+    public function generateExportFeed($platform)
     {
-        return !empty($product['id']) && !empty($product['title']) && !empty($product['price']) && $product['price'] > 0;
+        $feed = FeedExport::where('platform', $platform)->firstOrFail();
+        $products = Product::all();
+
+        // Add product labels from profitability analysis
+        foreach ($products as $product) {
+            $productLabel = ProductLabel::where('product_id', $product->id)->first();
+            $product->custom_label = $productLabel ? $productLabel->label : 'Neutral';
+        }
+
+        // Apply filters
+        $filteredProducts = $this->applyFilters($feed);
+
+        // Render XML or CSV feed template
+        return View::make('feed-management.export-template', compact('filteredProducts'))->render();
+    }
+
+    /**
+     * Log Errors Related to Feed Processing.
+     */
+    public function logError($feedName, $message)
+    {
+        FeedErrorLog::create([
+            'feed_name' => $feedName,
+            'error_message' => $message,
+            'logged_at' => now(),
+        ]);
     }
 }
+
+

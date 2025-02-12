@@ -2,33 +2,65 @@
 
 namespace App\Services;
 
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\RequestException;
+use Illuminate\Support\Facades\Http;
 
 class GoogleAdsService
 {
-    public static function getSummary()
-    {
-        $apiUrl = env('GOOGLE_ADS_API_ENDPOINT');
-        $apiKey = env('GOOGLE_ADS_API_KEY');
+    protected $apiUrl;
+    protected $apiKey;
+    protected $customerId;
 
-        if (!$apiUrl || !is_string($apiUrl)) {
-            return ['error' => 'Invalid or missing API URL'];
+    public function __construct()
+    {
+        $this->apiUrl = rtrim(config('services.google_ads.api_endpoint'), '/');
+        $this->apiKey = config('services.google_ads.api_key');
+        $this->customerId = config('services.google_ads.customer_id');
+    }
+
+    public function getSummary()
+    {
+        if (!$this->customerId) {
+            \Log::error("Google Ads API: Missing customer ID.");
+            return $this->defaultSummary();
         }
 
-        $client = new Client();
+        $url = "{$this->apiUrl}/v13/customers/{$this->customerId}/googleAds:search";
 
         try {
-            $response = $client->request('GET', $apiUrl, [
-                'headers' => [
-                    'Authorization' => 'Bearer ' . $apiKey,
-                    'Accept' => 'application/json',
-                ],
-            ]);
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $this->apiKey,
+                'Accept' => 'application/json',
+            ])->get($url);
 
-            return json_decode($response->getBody()->getContents(), true);
-        } catch (RequestException $e) {
-            return ['error' => 'API request failed: ' . $e->getMessage()];
+            if ($response->successful()) {
+                $data = $response->json();
+
+                return [
+                    'total_budget' => $data['budget']['total'] ?? 0,
+                    'spent' => $data['budget']['spent'] ?? 0,
+                    'remaining' => ($data['budget']['total'] ?? 0) - ($data['budget']['spent'] ?? 0),
+                    'percentage_spent' => ($data['budget']['total'] > 0) ? round(($data['budget']['spent'] / $data['budget']['total']) * 100, 2) : 0,
+                ];
+            }
+
+            \Log::error("Google Ads API Error: " . $response->body());
+            return $this->defaultSummary();
+        } catch (\Exception $e) {
+            \Log::error("Google Ads API Exception: " . $e->getMessage());
+            return $this->defaultSummary();
         }
     }
+
+    private function defaultSummary()
+    {
+        return [
+            'total_budget' => 0,
+            'spent' => 0,
+            'remaining' => 0,
+            'percentage_spent' => 0,
+        ];
+    }
 }
+
+
+

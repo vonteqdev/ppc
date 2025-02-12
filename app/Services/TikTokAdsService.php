@@ -2,33 +2,41 @@
 
 namespace App\Services;
 
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\RequestException;
+use Illuminate\Support\Facades\Http;
 
 class TikTokAdsService
 {
-    public static function getSummary()
+    public function getSummary()
     {
-        $apiUrl = env('TIKTOK_ADS_API_ENDPOINT');
-        $apiKey = env('TIKTOK_ADS_API_KEY');
-
-        if (!$apiUrl || !is_string($apiUrl)) {
-            return ['error' => 'Invalid or missing API URL'];
-        }
-
-        $client = new Client();
-
         try {
-            $response = $client->request('GET', $apiUrl, [
-                'headers' => [
-                    'Authorization' => 'Bearer ' . $apiKey,
-                    'Accept' => 'application/json',
-                ],
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . env('TIKTOK_ADS_API_KEY')
+            ])->get(env('TIKTOK_ADS_API_ENDPOINT'), [
+                'metrics' => ['clicks', 'impressions', 'reach', 'conversions', 'cost'],
+                'date_range' => 'last_7_days'
             ]);
 
-            return json_decode($response->getBody()->getContents(), true);
-        } catch (RequestException $e) {
-            return ['error' => 'API request failed: ' . $e->getMessage()];
+            if ($response->successful()) {
+                return $response->json();
+            }
+
+            return [
+                'clicks' => [0],
+                'impressions' => [0],
+                'reach' => [0],
+                'conversions' => [0],
+                'cost' => [0],
+                'dates' => []
+            ];
+        } catch (\Exception $e) {
+            return [
+                'clicks' => [0],
+                'impressions' => [0],
+                'reach' => [0],
+                'conversions' => [0],
+                'cost' => [0],
+                'dates' => []
+            ];
         }
     }
 }

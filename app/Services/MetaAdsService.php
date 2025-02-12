@@ -2,33 +2,45 @@
 
 namespace App\Services;
 
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\RequestException;
+use Illuminate\Support\Facades\Http;
 
 class MetaAdsService
 {
-    public static function getSummary()
+    protected $endpoint;
+    protected $apiKey;
+
+    public function __construct()
     {
-        $apiUrl = env('META_ADS_API_ENDPOINT');
-        $apiKey = env('META_ADS_API_KEY');
+        $this->endpoint = config('services.meta_ads.endpoint');
+        $this->apiKey = config('services.meta_ads.api_key');
+    }
 
-        if (!$apiUrl || !is_string($apiUrl)) {
-            return ['error' => 'Invalid or missing API URL'];
-        }
-
-        $client = new Client();
-
+    public function getSummary()
+    {
         try {
-            $response = $client->request('GET', $apiUrl, [
-                'headers' => [
-                    'Authorization' => 'Bearer ' . $apiKey,
-                    'Accept' => 'application/json',
-                ],
+            $response = Http::withHeaders([
+                'Authorization' => "Bearer {$this->apiKey}",
+            ])->get("{$this->endpoint}/insights", [
+                'fields' => 'clicks,impressions,spend,reach',
+                'date_preset' => 'last_7_days'
             ]);
 
-            return json_decode($response->getBody()->getContents(), true);
-        } catch (RequestException $e) {
-            return ['error' => 'API request failed: ' . $e->getMessage()];
+            if ($response->successful()) {
+                $data = $response->json()['data'][0] ?? [];
+
+                return [
+                    'clicks' => $data['clicks'] ?? 0,
+                    'impressions' => $data['impressions'] ?? 0,
+                    'reach' => $data['reach'] ?? 0,
+                    'spend' => $data['spend'] ?? 0,
+                    'dates' => array_keys($data),
+                ];
+            }
+
+            return null;
+        } catch (\Exception $e) {
+            return null;
         }
     }
 }
+
