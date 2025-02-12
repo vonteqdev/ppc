@@ -197,6 +197,8 @@
         <script src="{{ URL::asset('assets/js/plugins/bootstrap-notify/bootstrap-notify.min.js') }}"></script>
         <script src="{{ URL::asset('assets/js/plugins/select2/select2.min.js')}}"></script>
         <script src="{{ URL::asset('assets/js/plugins/lazyload-1.9.1/jquery.lazyload.js') }}"></script>
+        <script src="{{ URL::asset('assets/js/plugins/multistep-form.js') }}"></script>
+
 
         <!-- Kanban scripts -->
         <script src="{{ URL::asset('assets/js/plugins/dragula/dragula.min.js') }}"></script>

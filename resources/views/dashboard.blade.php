@@ -6,7 +6,7 @@
 @endpush
 <x-app-layout>
 <div class="row">
-Hi {{auth()->user()->first_name}} test
+Hi s {{auth()->user()->first_name}} test
 </div>
 @push('js')
   <script src="{{ URL::asset('assets/js/plugins/chartjs.min.js') }}"></script>
