@@ -1,4 +1,10 @@
 <x-app-layout>
+    {{-- Test message added at top of dashboard --}}
+    <div class="container-fluid py-2">
+        <div class="alert alert-info mb-4">
+            aceasta e modificare de test merge
+        </div>
+    </div>
     <div class="container-fluid py-4">
         <div class="row">
             <!-- Google Ads Performance -->
