@@ -31,4 +31,10 @@ return [
         ],
     ],
 
+    'tiktok_ads' => [
+        'api_key' => env('TIKTOK_ADS_API_KEY'),
+        'endpoint' => env('TIKTOK_ADS_API_ENDPOINT'),
+    ],
+
+
 ];

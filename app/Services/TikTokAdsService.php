@@ -9,9 +9,16 @@ class TikTokAdsService
     public function getSummary()
     {
         try {
+            $endpoint = config('services.tiktok_ads.endpoint');
+            $apiKey = config('services.tiktok_ads.api_key');
+
+            if (!$endpoint || !$apiKey) {
+                throw new \Exception('TikTok API config missing. Check .env or config/services.php');
+            }
+
             $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . env('TIKTOK_ADS_API_KEY')
-            ])->get(env('TIKTOK_ADS_API_ENDPOINT'), [
+                'Authorization' => 'Bearer ' . $apiKey
+            ])->get($endpoint, [
                 'metrics' => ['clicks', 'impressions', 'reach', 'conversions', 'cost'],
                 'date_range' => 'last_7_days'
             ]);
@@ -20,23 +27,17 @@ class TikTokAdsService
                 return $response->json();
             }
 
-            return [
-                'clicks' => [0],
-                'impressions' => [0],
-                'reach' => [0],
-                'conversions' => [0],
-                'cost' => [0],
-                'dates' => []
-            ];
         } catch (\Exception $e) {
-            return [
-                'clicks' => [0],
-                'impressions' => [0],
-                'reach' => [0],
-                'conversions' => [0],
-                'cost' => [0],
-                'dates' => []
-            ];
+            // log optional: \Log::error($e->getMessage());
         }
+
+        return [
+            'clicks' => [0],
+            'impressions' => [0],
+            'reach' => [0],
+            'conversions' => [0],
+            'cost' => [0],
+            'dates' => []
+        ];
     }
 }
